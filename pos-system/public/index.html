@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLAM DUNKS POS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="brand-header">
+        <div class="brand-title">
+            <div class="brand-mark" aria-label="SLAM DUNKS logo">
+                <svg viewBox="0 0 64 64" class="brand-icon" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="shoeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8"/>
+                            <stop offset="100%" stop-color="#60a5fa"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M8 38c8-8 16-10 28-10 4 0 12 2 18 8 2 2 4 4 4 4 0 4-6 6-14 6H14c-4 0-6-2-6-4 0-2 1-3 2-4z" fill="url(#shoeGradient)" opacity="0.95"/>
+                    <path d="M16 34c9-3 20-3 28 4 2 2 4 3 4 3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M18 28c12-6 24-6 32-2" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M20 24c8-5 20-5 28-1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M32 44c4 0 6-1 8-3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <circle cx="18" cy="46" r="2" fill="#fff"/>
+                    <circle cx="42" cy="46" r="2" fill="#fff"/>
+                </svg>
+            </div>
+            <div>
+                <h1>SLAM DUNKS POS</h1>
+                <p class="tagline">Fast Kicks, Fast Sales.</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-controls hidden">
+        <div class="theme-switcher" aria-label="Theme mode switch">
+            <button id="darkModeBtn" class="mode-btn active" aria-label="Dark mode">🌙</button>
+            <button id="lightModeBtn" class="mode-btn" aria-label="Light mode">☀️</button>
+        </div>
+        <div class="account-mini hidden" id="accountMini">
+            <span class="mini-label">Logged in as <strong id="miniAccountLabel">Guest</strong></span>
+            <div class="mini-actions">
+                <button type="button" id="miniCreateBtn" class="secondary">➕ Create</button>
+                <button type="button" id="miniLogoutBtn" class="secondary">🚪 Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginOverlay" class="login-overlay active">
+        <div class="login-card">
+            <div class="auth-header">
+                <h2>SLAM DUNKS POS</h2>
+                <p>Sign in to access dashboard, catalog, customer, and analytics.</p>
+            </div>
+            <div id="loginForm" class="auth-form">
+                <input type="text" id="overlayAccountName" placeholder="Username">
+                <input type="password" id="overlayAccountPass" placeholder="Password">
+                <button id="overlayLoginBtn">Log In</button>
+                <button id="openCreateOverlayBtn" class="secondary">➕ Create Account</button>
+            </div>
+            <div id="createOverlay" class="auth-form hidden">
+                <input type="text" id="overlayNewName" placeholder="Username">
+                <input type="password" id="overlayNewPass" placeholder="Password">
+                <input type="email" id="overlayNewEmail" placeholder="Email address">
+                <button id="overlayConfirmCreateBtn">✔ Create Account</button>
+                <button id="overlayCancelCreateBtn" class="secondary">← Back to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="accountCreateFlyout" class="account-create-flyout hidden">
+        <div class="flyout-card">
+            <h4>Create New Account</h4>
+            <input type="text" id="flyoutNewName" placeholder="Username">
+            <input type="password" id="flyoutNewPass" placeholder="Password">
+            <input type="email" id="flyoutNewEmail" placeholder="Email">
+            <div class="account-action-row">
+                <button id="flyoutConfirmCreateBtn">✔ Create</button>
+                <button id="flyoutCancelCreateBtn" class="secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="tabs hidden">
+        <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-button" data-tab="catalog">Catalog</button>
+        <button class="tab-button" data-tab="customer">Customer</button>
+        <button class="tab-button" data-tab="analytics">Analytics</button>
+    </nav>
+
+    <main class="tab-content hidden">
+        <section id="dashboard" class="tab-panel active">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-card-head">
+                        <span class="stat-title">Products</span>
+                        <div class="stat-ring ring-blue"></div>
+                    </div>
+                    <span id="totalProducts" class="stat-value">0</span>
+                    <p class="stat-caption">Active inventory count</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-head">
+                        <span class="stat-title">Low Stock</span>
+                        <div class="stat-ring ring-warning"></div>
+                    </div>
+                    <span id="lowStock" class="stat-value">0</span>
+                    <p class="stat-caption">Critical items near reorder</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-head">
+                        <span class="stat-title">Revenue</span>
+                        <div class="stat-ring ring-green"></div>
+                    </div>
+                    <span id="salesToday" class="stat-value">₱0</span>
+                    <p class="stat-caption">Sales volume recorded</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-head">
+                        <span class="stat-title">Best Seller</span>
+                        <div class="stat-ring ring-purple"></div>
+                    </div>
+                    <span id="bestSeller" class="stat-value">-</span>
+                    <p class="stat-caption">Top-performing style</p>
+                </div>
+            </div>
+            <div class="dashboard-summary-grid">
+                <div class="report-card accent-card">
+                    <h3>Suggested Items</h3>
+                    <ul id="suggestedItems" class="small-list"></ul>
+                </div>
+                <div class="report-card accent-card">
+                    <h3>Recent Sales</h3>
+                    <ul id="recentSaleList" class="small-list"></ul>
+                </div>
+                <div class="report-card accent-card">
+                    <h3>Auto Restock Alerts</h3>
+                    <ul id="restockAlerts" class="small-list"></ul>
+                </div>
+                <div class="report-card pie-card">
+                    <h3>Sales Breakdown</h3>
+                    <canvas id="dashboardPie"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="catalog" class="tab-panel">
+            <section class="search-toolbar">
+                <div class="filter-group vertical">
+                    <input type="text" id="search" placeholder="Search by name, code, color, size or barcode...">
+                    <div class="search-row">
+                        <button id="searchBtn">Search</button>
+                        <button id="scanBarcode" class="secondary">Scan Barcode</button>
+                    </div>
+                    <div class="search-filters">
+                        <label>Category</label>
+                        <select id="categoryFilter">
+                            <option value="all">All</option>
+                            <option value="Running">Running</option>
+                            <option value="Casual">Casual</option>
+                            <option value="Basketball">Basketball</option>
+                            <option value="Formal">Formal</option>
+                            <option value="Sandals">Sandals</option>
+                            <option value="Modeling">Modeling</option>
+                        </select>
+                    </div>
+                    <div class="chip-row" id="categoryChips"></div>
+                    <div class="barcode-panel">
+                        <span class="barcode-label">Last scan:</span>
+                        <span id="barcodeDisplay" class="barcode-value" aria-live="polite">None</span>
+                    </div>
+                </div>
+            </section>
+            <section class="catalog-panel">
+                <div class="panel-header">
+                    <h2>Product Catalog</h2>
+                    <span class="panel-note">Scroll horizontally to browse products quickly.</span>
+                </div>
+                <div id="products" class="product-grid"></div>
+            </section>
+        </section>
+
+        <section id="customer" class="tab-panel">
+            <section class="customer-layout">
+                <div class="sidebar">
+                    <section class="section customer-section">
+                        <h3>Customer Info</h3>
+                        <label>Name</label>
+                        <input type="text" id="customerName" placeholder="Customer name">
+                        <label>Contact</label>
+                        <input type="text" id="customerContact" placeholder="Contact number">
+                        <button id="saveCustomer">Save Customer</button>
+                        <div class="customer-card">
+                            <strong id="customerLabel">No customer selected</strong>
+                            <p id="customerHistoryLabel">Purchase history will appear here.</p>
+                            <ul id="customerHistory"></ul>
+                        </div>
+                    </section>
+                    <section class="section transaction-section">
+                        <h3>Sales Transaction</h3>
+                        <label>Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="GCash">GCash</option>
+                            <option value="Card">Card</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                        <div class="cart-card">
+                            <h4>Cart</h4>
+                            <ul id="cartItems"></ul>
+                            <div class="cart-totals">
+                                <div class="cart-total">Total: <span id="cartTotal">₱0</span></div>
+                                <div class="cart-change">
+                                    <label>Tendered</label>
+                                    <input type="number" id="tenderedAmount" placeholder="₱0">
+                                    <div class="change-value">Change: <span id="changeAmount">₱0</span></div>
+                                </div>
+                            </div>
+                            <div class="cart-actions">
+                                <button id="checkout">Checkout</button>
+                                <button id="printReceipt" class="secondary">Print Receipt</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="return-panel">
+                    <section class="section refund-section">
+                        <h3>Returns & Refunds</h3>
+                        <p>Select a transaction below to refund items and adjust stock.</p>
+                        <ul id="returnTransactionList" class="transaction-list"></ul>
+                    </section>
+                </div>
+            </section>
+        </section>
+
+        <section id="analytics" class="tab-panel">
+            <section class="analytics-panel">
+                <div class="panel-header">
+                    <h2>Sales Dashboard</h2>
+                </div>
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h3>Category Sales</h3>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Sales Report</h3>
+                        <ul class="sales-report-list">
+                            <li>Total Revenue: <strong id="totalRevenue">₱0</strong></li>
+                            <li>Best Selling Item: <strong id="bestSellingItem">-</strong></li>
+                            <li>Daily: <strong id="dailyRevenue">₱0</strong></li>
+                            <li>Weekly: <strong id="weeklyRevenue">₱0</strong></li>
+                            <li>Monthly: <strong id="monthlyRevenue">₱0</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="stock-panel">
+                    <h3>Stock Summary</h3>
+                    <div id="stockGrid" class="stock-grid"></div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <script src="app.js"></script>
+</body>
+</html>
